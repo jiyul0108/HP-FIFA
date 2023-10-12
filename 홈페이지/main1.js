@@ -3,11 +3,13 @@ const nickname = '손흑민우';
 
 const url = `https://public.api.nexon.com/openapi/fconline/v1.0/users?nickname=${nickname}`;
 
-fetch(url, {
-  headers: {'Authorization': api_key}
-})
+fetch(url,{headers: {'Authorization': api_key}})
 .then(response => response.json())
 .then(data => {
-    var name = data.level;
+    var name;
+    name = data.nickname;
     document.querySelector(".fcName").innerHTML = name;
+    var level;
+    level = data.level;
+    document.querySelector(".fclevel").innerHTML = level;
 });
