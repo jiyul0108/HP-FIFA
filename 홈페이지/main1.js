@@ -4,6 +4,11 @@ const accessid = '5b81e1decbe8609d95a1d6f3';
 
 const url1 = `https://public.api.nexon.com/openapi/fconline/v1.0/users?nickname=${nickname}`;
 const url2 = `https://public.api.nexon.com/openapi/fconline/v1.0/users/${accessid}/markets?tradetype=buy&offset=0&limit=5`;
+
+const url3 = `https://public.api.nexon.com/openapi/fconline/v1.0/users/${accessid}`
+
+
+
 fetch(url1,{headers: {'Authorization': api_key}})
 .then(response => response.json())
 .then(data => {
@@ -22,6 +27,15 @@ fetch(url2,{headers: {'Authorization': api_key}})
 .then(data => {
     var tradeDate = data.tradeDate;
     document.querySelector(".fctradeDate").innerHTML = tradeDate;
+
+
+});
+
+fetch(url3,{headers: {'Authorization': api_key}})
+.then(response => response.json())
+.then(data => {
+    var name = data.nickname;
+    document.querySelector(".fcnickname").innerHTML = name;
 
 
 });
