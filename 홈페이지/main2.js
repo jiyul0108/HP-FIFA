@@ -39,19 +39,19 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
                 // }
                 function getPlayerInfo(playerID) {
                     const playerInfo = [];
-                
+
                     const playerSeason = parseInt(String(playerID).slice(0, 3));
-                
+
                     let seasonInfo = seasonData.find(info => info.seasonId === playerSeason);
-                
+
                     if (seasonInfo) {
                         playerInfo.push(seasonInfo.className);
                     } else {
                         playerInfo.push('Unknown Season');
                     }
-                
+
                     let playerInfoData = spidData.find(info => info.id === playerID);
-                
+
                     if (playerInfoData) {
                         playerInfo.push(playerInfoData.name);
                     } else {
@@ -59,7 +59,7 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
                     }
                     return playerInfo;
                 }
-                
+
 
 
 
@@ -69,7 +69,7 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
                 // (4) 닉네임을 입력받아 유저 고유 식별자 가져오기
                 function getUserId(nickname) {
                     const url = `https://public.api.nexon.com/openapi/fconline/v1.0/users?nickname=${nickname}`;
-                                
+
                     return fetch(url, { headers: { 'Authorization': apiKey } })
                         .then(response => response.json())
                         .then(userInfo => userInfo.accessId);
@@ -114,15 +114,22 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
                 }
 
                 // (7) HTML 페이지에 결과를 출력하는 함수
+                // (7) HTML 페이지에 결과를 출력하는 함수
                 function displayOnHTML(result) {
                     const outputElement = document.getElementById('output');
                     outputElement.innerHTML = '';
+
+                    let count = 1;
 
                     for (const info of result) {
                         const playerInfo = getPlayerInfo(info["구매 선수"]);
                         info["구매 선수"] = `${playerInfo[0]} ${playerInfo[1]}`;
 
                         const transactionDiv = document.createElement('div');
+
+                        const pElementCount = document.createElement('p');
+                        pElementCount.textContent = count;
+                        transactionDiv.appendChild(pElementCount);
 
                         for (const [k, v] of Object.entries(info)) {
                             const pElement = document.createElement('p');
@@ -131,8 +138,10 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
                         }
 
                         outputElement.appendChild(transactionDiv);
+                        count++;
                     }
                 }
+
 
                 // (8) 사용자 입력을 받아 처리하고 HTML에 출력하는 함수
                 function loadMarketInfo() {
