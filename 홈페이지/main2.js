@@ -15,28 +15,51 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
             .then(response => response.json())
             .then(seasonData => {
                 // (3) 선수 고유 식별 정보를 통해 선수 시즌 & 이름 가져오는 함수
+                // function getPlayerInfo(playerID) {
+                //     const playerInfo = [];
+
+                //     const playerSeason = parseInt(String(playerID).slice(0, 3));
+
+                //     console.log('spidData', spidData);
+                //     console.log('seasonData', seasonData);
+
+                //     for (const info of seasonData) {
+                //         if (info.seasonId === playerSeason) {
+                //             playerInfo.push(info.className);
+                //         }
+                //     }
+
+                //     for (const info of spidData) {
+                //         if (info.id === playerID) {
+                //             playerInfo.push(info.name);
+                //         }
+                //     }
+
+                //     return playerInfo.length === 2 ? playerInfo : ['Unknown', 'Unknown'];
+                // }
                 function getPlayerInfo(playerID) {
                     const playerInfo = [];
-
+                
                     const playerSeason = parseInt(String(playerID).slice(0, 3));
-
-                    console.log('spidData', spidData);
-                    console.log('seasonData', seasonData);
-
-                    for (const info of seasonData) {
-                        if (info.seasonId === playerSeason) {
-                            playerInfo.push(info.className);
-                        }
+                
+                    let seasonInfo = seasonData.find(info => info.seasonId === playerSeason);
+                
+                    if (seasonInfo) {
+                        playerInfo.push(seasonInfo.className);
+                    } else {
+                        playerInfo.push('Unknown Season');
                     }
-
-                    for (const info of spidData) {
-                        if (info.id === playerID) {
-                            playerInfo.push(info.name);
-                        }
+                
+                    let playerInfoData = spidData.find(info => info.id === playerID);
+                
+                    if (playerInfoData) {
+                        playerInfo.push(playerInfoData.name);
+                    } else {
+                        playerInfo.push('Unknown Player');
                     }
-
-                    return playerInfo.length === 2 ? playerInfo : ['Unknown', 'Unknown'];
+                    return playerInfo;
                 }
+                
 
 
 
@@ -70,7 +93,7 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
                                     "가격": new Intl.NumberFormat().format(info.value)
                                 });
                             }
-
+                            goodPrint(trans);
                             return trans;
                         });
                 }
