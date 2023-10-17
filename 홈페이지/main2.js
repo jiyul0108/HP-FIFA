@@ -8,7 +8,7 @@ const spidMetadataUrl = 'https://static.api.nexon.co.kr/fconline/latest/spid.jso
 fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
     .then(response => response.json())
     .then(spidData => {
-        // (2) 선수 시즌 metadata 불러오기
+        // (2) 선수 시즌(클래스) metadata 불러오기
         const seasonMetadataUrl = 'https://static.api.nexon.co.kr/fconline/latest/seasonid.json';
 
         fetch(seasonMetadataUrl, { headers: { 'Authorization': apiKey } })
