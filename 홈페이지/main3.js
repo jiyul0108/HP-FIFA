@@ -1,4 +1,4 @@
-const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJYLUFwcC1SYXRlLUxpbWl0IjoiNTAwOjEwIiwiYWNjb3VudF9pZCI6IjE2NjE2NDE4ODciLCJhdXRoX2lkIjoiMiIsImV4cCI6MTcxMjU2NDU5NiwiaWF0IjoxNjk3MDEyNTk2LCJuYmYiOjE2OTcwMTI1OTYsInNlcnZpY2VfaWQiOiI0MzAwMTE0ODEiLCJ0b2tlbl90eXBlIjoiQWNjZXNzVG9rZW4ifQ.uZHyGkNLHrjgRsTZmOqAOgZ9mEtYEPyL8OUkBXIKrAg';  // 여러분의 API 키
+const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJYLUFwcC1SYXRlLUxpbWl0IjoiNTAwOjEwIiwiYWNjb3VudF9pZCI6IjE2NjE2NDE4ODciLCJhdXRoX2lkIjoiMiIsImV4cCI6MTcxMjU2NDU5NiwiaWF0IjoxNjk3MDEyNTk2LCJuYmYiOjE2OTcwMTI1OTYsInNlcnZpY2VfaWQiOiI0MzAwMTE0ODEiLCJ0b2tlbl90eXBlIjoiQWNjZXNzVG9rZW4ifQ.uZHyGkNLHrjgRsTZmOqAOgZ9mEtYEPyL8OUkBXIKrAg'; // 여러분의 API 키
 const tradetype = 'buy'; // 거래 유형 ('buy' 또는 'sell')
 const limit = 10; // 가져올 개수 (기본값: 10)
 
@@ -14,29 +14,31 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
         fetch(seasonMetadataUrl, { headers: { 'Authorization': apiKey } })
             .then(response => response.json())
             .then(seasonData => {
+                // (3) 선수 고유 식별 정보를 통해 선수 시즌 & 이름 가져오는 함수
                 function getPlayerInfo(playerID) {
-                    const playerInfo = [];
-
-                    const playerSeason = parseInt(String(playerID).slice(0, 3));
-
-                    let seasonInfo = seasonData.find(info => info.seasonId === playerSeason);
-
-                    if (seasonInfo) {
-                        playerInfo.push(seasonInfo.className);
-                    } else {
-                        playerInfo.push('Unknown Season');
-                    }
-
-                    let playerInfoData = spidData.find(info => info.id === playerID);
-
-                    if (playerInfoData) {
-                        playerInfo.push(playerInfoData.name);
-                    } else {
-                        playerInfo.push('Unknown Player');
-                    }
-                    return playerInfo;
+                    return new Promise((resolve, reject) => {
+                        const playerInfo = [];
+                
+                        const playerSeason = parseInt(String(playerID).slice(0, 3));
+                
+                        let seasonInfo = seasonData.find(info => info.seasonId === playerSeason);
+                
+                        if (seasonInfo) {
+                            playerInfo.push(seasonInfo.className);
+                        } else {
+                            playerInfo.push('Unknown Season');
+                        }
+                
+                        let playerInfoData = spidData.find(info => info.id === playerID);
+                
+                        if (playerInfoData) {
+                            playerInfo.push(playerInfoData.name);
+                            resolve(playerInfo); // Promise가 성공적으로 완료되었음을 알립니다.
+                        } else {
+                            reject('Player not found'); // 에러 메시지와 함께 Promise 실패 상태로 변경합니다.
+                        }
+                    });
                 }
-
 
                 // (4) 닉네임을 입력받아 유저 고유 식별자 가져오기
                 function getUserId(nickname) {
@@ -50,24 +52,26 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
                 // (5) 유저 고유 식별자를 이용하여 이적 시장 거래내역 불러오기
                 function getMarketInfo(userAccessId, number) {
                     const url = `https://public.api.nexon.com/openapi/fconline/v1.0/users/${userAccessId}/markets?tradetype=${tradetype}&offset=0&limit=${number}`;
-
+                
                     return fetch(url, { headers: { 'Authorization': apiKey } })
-                        .then(response => response.json())
-                        .then(transInfo => {
-                            const trans = [];
-
-                            for (const info of transInfo) {
-                                const playerInfo = getPlayerInfo(info.spid);
-                                trans.push({
-                                    "구매 날짜": info.tradeDate.replace("T", " "),
-                                    "구매 선수": `${playerInfo[0]} ${playerInfo[1]}`,
-                                    "강화 단계": info.grade,
-                                    "가격": new Intl.NumberFormat().format(info.value)
-                                });
-                            }
-                            goodPrint(trans);
-                            return trans;
-                        });
+                      .then(response => response.json())
+                      .then(async transInfos => { // async keyword is added here to allow await inside the function
+                          const transPromises = transInfos.map(async info => { // map function returns an array of promises
+                              const playerInfos = await getPlayerinfo(info.spid); // wait until the promise resolves before continuing
+                
+                              return ({
+                                  "구매 날짜": info.tradeDate.replace("T", " "),
+                                  "구매 선수": `${playerInfos[0]} ${playerInfos[1]}`,
+                                  "강화 단계": info.grade,
+                                  "가격": new Intl.NumberFormat().format(info.value)
+                              });
+                          });
+                
+                          const trans = await Promise.all(transPromises); // wait until all promises in the array are resolved
+                
+                          goodPrint(trans);
+                          return trans;
+                      });
                 }
 
                 // (6) 깔끔한 정보 출력을 위한 함수 생성
@@ -85,30 +89,29 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
                     }
                 }
 
-
                 // (7) HTML 페이지에 결과를 출력하는 함수
                 function displayOnHTML(result) {
                     const outputElement = document.getElementById('output');
                     outputElement.innerHTML = '';
-
+                
                     let count = 1;
-
+                
                     for (const info of result) {
                         const playerInfo = getPlayerInfo(info["구매 선수"]);
                         info["구매 선수"] = `${playerInfo[0]} ${playerInfo[1]}`;
-
+                
                         const transactionDiv = document.createElement('div');
-
+                
                         const pElementCount = document.createElement('p');
                         pElementCount.textContent = count;
                         transactionDiv.appendChild(pElementCount);
-
+                
                         for (const [k, v] of Object.entries(info)) {
                             const pElement = document.createElement('p');
                             pElement.textContent = `${k}: ${v}`;
                             transactionDiv.appendChild(pElement);
                         }
-
+                
                         outputElement.appendChild(transactionDiv);
                         count++;
                     }
@@ -139,5 +142,3 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
             .catch(error => console.error('Error:', error));
     })
     .catch(error => console.error('Error:', error));
-
-
