@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200&display=swap" rel="stylesheet">
+    <title>My page</title>
+    <script src="https://kit.fontawesome.com/6871c5976f.js" crossorigin="anonymous">
+    </script>
+    
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar_logo">
+            <a href="http://127.0.0.1:3000/index.html"><i class="fa-solid fa-house fa-xl"></i></a>
+        </div>
+
+        <ul class="navbar_menu">
+            <li><a href="https://www.naver.com/" target="_blank">NAVER</a></li>
+            <li><a href="https://www.google.com/?hl=ko" target="_blank">GOOGLE</a></li>
+            <li><a href="https://chat.openai.com/" target="_blank">CHAT GPT</a></li>
+            <li><a href="http://127.0.0.1:3000/FCONLINE.html">FC ONLINE</a></li>
+            <li><a href="http://127.0.0.1:3000/index1.html">weather</a></li>
+        </ul>
+
+        <ul class="navbar_icons">
+            <a href="https://www.instagram.com/jiyul_0108/?next=%2F" target="_blank">
+                <li><i class="fa-brands fa-instagram"></i></li>
+            </a>
+            <a href="https://www.youtube.com/" target="_blank">
+                <li><i class="fa-brands fa-youtube"></i></li>
+            </a>
+            <a href="https://github.com/jiyul0108" target="_blank">
+                <li><i class="fa-brands fa-github"></i></li>
+            </a>
+        </ul>
+        <a href="#" class="navbar_tooglebtn">
+            <i class="fa-sharp fa-solid fa-bars"></i>
+        </a>
+
+    </nav>
+    <article>
+        <label for="nickname">피파온라인4 닉네임을 입력하세요:</label>
+        <input type="text" id="nickname"><br>
+        <label for="number">불러올 거래내역 개수를 입력하세요:</label>
+        <input type="number" id="number" min="1" max="100"><br>
+        <button id="searchButton">조회하기</button>
+
+
+        <div id="output"></div>
+        <script src="main.js"></script>
+        <script src="main2.js"></script>
+    </article>
+</body>
+
+</html>
