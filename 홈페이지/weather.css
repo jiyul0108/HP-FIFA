@@ -1,0 +1,103 @@
+.card { /* 날씨 카드 꾸밈 */
+    width: 90%;
+    max-width: 400px;
+    background: linear-gradient(135deg, #00feba, #5b548a);
+    color: #fff;
+    margin: 20px auto 0;
+    border-radius: 20px;
+    padding: 40px 35px;
+    text-align: center;
+}
+
+.search { /* 카드 안에 정렬 */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.search input { /* 입력값 받는 곳 Css */
+    border: 0;
+    outline: 0;
+    background: #ebfffc;
+    color: #555;
+    padding: 10px 25px;
+    height: 60px;
+    border-radius: 30px;
+    flex: 1;
+    margin-right: 16px;
+    font-size: 18px;
+}
+
+.search button { /* 버튼 꾸밈 */
+    border: 0;
+    outline: 0;
+    background: #ebfffc;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+}
+
+.search button img { /* 버튼 안 이미지 크기 조절 */
+    width: 16px;
+}
+
+.weather-icon { /* 날씨 아이콘 크기 조절 */
+    width: 170px;
+    margin-top: 30px;
+}
+
+.weather h1{ /* h1의 글씨 크기 조절 */
+    font-size: 80px;
+    font-weight: 500;
+}
+
+.weather h2{ /* h2의 글씨 크기 조절 */
+    font-size: 45px;
+    font-weight: 400;
+    margin-top: -10px;
+}
+
+.details {  /* details 안에 있는 값들을 정렬 */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    margin-top: 50px;
+}
+
+.col { /* col의 글씨 위치 조정 */
+    display: flex;
+    align-items: center;
+    text-align: left;
+}
+
+.col img { /* img의 크기 조정 */
+    width: 60px;
+    margin-right: 10px;
+}
+
+.humidity, .wind {
+    /* font-size: 20px; */
+    margin-top: 10px;
+}
+
+.size {
+    font-size: 18px;
+    text-align: center;
+}
+
+
+
+.weather {
+    display: none;
+}
+
+.error {
+    text-align: left;
+    margin-left: 10px;
+    font-size: 14px;
+    margin-top: 10px;
+    display: none;
+}
