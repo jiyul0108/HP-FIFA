@@ -16,7 +16,6 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
             .then(seasonData => {
                 function getPlayerInfo(playerID) {
                     const playerInfo = [];
-
                     const playerSeason = parseInt(String(playerID).slice(0, 3));
 
                     let seasonInfo = seasonData.find(info => info.seasonId === playerSeason);
@@ -37,7 +36,6 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
                     return playerInfo;
                 }
 
-
                 // (4) 닉네임을 입력받아 유저 고유 식별자 가져오기
                 function getUserId(nickname) {
                     const url = `https://public.api.nexon.com/openapi/fconline/v1.0/users?nickname=${nickname}`;
@@ -48,6 +46,7 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
                 }
 
                 // (5) 유저 고유 식별자를 이용하여 이적 시장 거래내역 불러오기
+                // (5) 유저 고유 식별자를 이용하여 이적 시장 거래내역 불러오기
                 function getMarketInfo(userAccessId, number) {
                     const url = `https://public.api.nexon.com/openapi/fconline/v1.0/users/${userAccessId}/markets?tradetype=${tradetype}&offset=0&limit=${number}`;
 
@@ -57,18 +56,21 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
                             const trans = [];
 
                             for (const info of transInfo) {
-                                const playerInfo = getPlayerInfo(info.spid);
                                 trans.push({
                                     "구매 날짜": info.tradeDate.replace("T", " "),
-                                    "구매 선수": `${playerInfo[0]} ${playerInfo[1]}`,
+                                    "구매 선수": info.spid, // 여기서 선수의 spid 값을 그대로 사용합니다.
                                     "강화 단계": info.grade,
                                     "가격": new Intl.NumberFormat().format(info.value)
                                 });
                             }
+
                             goodPrint(trans);
                             return trans;
                         });
                 }
+
+
+
 
                 // (6) 깔끔한 정보 출력을 위한 함수 생성
                 function goodPrint(dictList) {
@@ -85,8 +87,6 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
                     }
                 }
 
-
-                // (7) HTML 페이지에 결과를 출력하는 함수
                 function displayOnHTML(result) {
                     const outputElement = document.getElementById('output');
                     outputElement.innerHTML = '';
@@ -123,11 +123,6 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
                     getUserId(nickname)
                         .then(userAccessId => getMarketInfo(userAccessId, limit))
                         .then(transInfo => {
-                            for (const info of transInfo) {
-                                const playerInfo = getPlayerInfo(info["구매 선수"]);
-                                info["구매 선수"] = `${playerInfo[0]} ${playerInfo[1]}`;
-                            }
-
                             displayOnHTML(transInfo);
                         })
                         .catch(error => console.error('Error:', error));
