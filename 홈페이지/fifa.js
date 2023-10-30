@@ -1,6 +1,6 @@
 const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJYLUFwcC1SYXRlLUxpbWl0IjoiNTAwOjEwIiwiYWNjb3VudF9pZCI6IjE2NjE2NDE4ODciLCJhdXRoX2lkIjoiMiIsImV4cCI6MTcxMjU2NDU5NiwiaWF0IjoxNjk3MDEyNTk2LCJuYmYiOjE2OTcwMTI1OTYsInNlcnZpY2VfaWQiOiI0MzAwMTE0ODEiLCJ0b2tlbl90eXBlIjoiQWNjZXNzVG9rZW4ifQ.uZHyGkNLHrjgRsTZmOqAOgZ9mEtYEPyL8OUkBXIKrAg';  // 여러분의 API 키
 const tradetype = 'buy'; // 거래 유형 ('buy' 또는 'sell')
-const limit = 8; // 가져올 개수 (기본값: 10)
+const limit = 20; // 가져올 개수 (기본값: 10)
 
 // (1) 선수 고유식별자 metadata 불러오기
 const spidMetadataUrl = 'https://static.api.nexon.co.kr/fconline/latest/spid.json';
