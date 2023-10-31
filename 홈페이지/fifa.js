@@ -14,6 +14,7 @@ fetch(spidMetadataUrl, { headers: { 'Authorization': apiKey } })
         fetch(seasonMetadataUrl, { headers: { 'Authorization': apiKey } })
             .then(response => response.json())
             .then(seasonData => {
+                
                 function getPlayerInfo(playerID) {
                     const playerInfo = [];
                     const playerSeason = parseInt(String(playerID).slice(0, 3));
